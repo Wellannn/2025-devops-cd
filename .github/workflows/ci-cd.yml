@@ -69,9 +69,9 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           
-      - name: Trigger Render Deploy (Web Service Update)
-        uses: johnny/render-action@v1.0.0
+      - name: Trigger Render Deploy via Webhook
+        run: |
+          echo "Triggering new deploy on Render..."
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         env:
-          RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }} 
-        with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
