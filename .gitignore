@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 target/
 
+liens_rendu.txt
+
 ### STS ###
 .apt_generated
 .classpath

@@ -25,13 +25,13 @@ jobs:
           cache: 'maven'
 
       - name: Run Maven Tests
-        run: mvn test
+        run: ./mvnw test
 
       - name: Build Docker Image (Check only)
         run: docker build -t wellannn/tp-check:latest .
 
       - name: Check Documentation Build
-        run: echo "Documentation build check passed."
+        run: ./mvnw javadoc:javadoc
 
   cd:
     name: Continuous Deployment
@@ -72,11 +72,11 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
           
-      - name: Generate Documentation Site (Maven)
-        run: mvn clean site
+      - name: Generate Documentation Site (Javadoc)
+        run: ./mvnw javadoc:javadoc 
 
       - name: Deploy Documentation to Netlify
-        run: netlify deploy --prod --dir=target/site --site ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --prod --dir=target/reports/apidocs --site ${{ secrets.NETLIFY_SITE_ID }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           
