@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - '*'
     paths-ignore:
       - 'README.md'
 
@@ -64,14 +65,23 @@ jobs:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli
 
+      - name: Set up JDK 17 for Build
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+          
+      - name: Generate Documentation Site (Maven)
+        run: mvn clean site
+
       - name: Deploy Documentation to Netlify
-        run: netlify deploy --prod --dir=docs --site ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --prod --dir=target/site --site ${{ secrets.NETLIFY_SITE_ID }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           
       - name: Trigger Render Deploy via Webhook
         run: |
-          echo "Triggering new deploy on Render..."
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
